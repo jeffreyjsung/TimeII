@@ -38,11 +38,18 @@ void loop() {
           else if (status == 'J'){
             flightStatus = FINISHED;
           }
+          char mark = Serial.read();
+          String time = "";
+          while (mark != ',') {
+            time += mark;
+            mark = Serial.read();
+          }
+          flightTime = time.toDouble();
         }
       }
     }
   }
 
 
-   
+
 }
