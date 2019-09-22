@@ -17,6 +17,7 @@ code_green_light = '#%02x%02x%02x' % (170, 200, 150)
 code_dark = '#%02x%02x%02x' % (23, 24, 30)
 
 
+# Simulator class stores relevant information
 class sim:
     simRunning = False
     simStart = False
@@ -26,8 +27,10 @@ class sim:
     timesTen = False
 
 
+
 flightSim = sim
 
+# Is the simulation running at x10 speed
 timesTen = False
 
 root.configure(bg=darkish)
@@ -220,6 +223,9 @@ escape_warning = IntVar()   # 18
 chute_warning = IntVar()    # 19
 landing_warning = IntVar()  # 20
 fault_warning = IntVar()    # 21
+
+
+# GUI labels and fields
 
 Label(root, text="Flight Status", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=0, padx=30)
 Label(root, text="Warnings", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=1)
