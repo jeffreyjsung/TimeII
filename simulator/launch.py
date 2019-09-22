@@ -83,7 +83,11 @@ def running():
             liftoff_warning.set(1)
             status.set('@')
 
+
         if flightSim.simRunning:
+
+            #TODO: Change max time
+            progress['value'] = flightSim.exp_time/3.07
 
             linearUpdate(altitude, 7, 135, 142706-3750)
             linearUpdate(altitude, 135, 153, 195343-142706)
