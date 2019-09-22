@@ -32,7 +32,7 @@ timesTen = False
 
 root.configure(bg=darkish)
 
-w = Label(root, text="BlueOrigin FlightSim", font='Helvetica 20 bold', bg=darkish, fg=whitish).grid(row=0, column=0, columnspan=6, padx=10)
+w = Label(root, text="Time II Flight Simulator", font='Helvetica 20 bold', bg=darkish, fg=whitish).grid(row=0, column=0, columnspan=6, padx=10)
 
 text_packet = Label(text="", bg=darkish, fg=whitish).grid(row=18, column=4)
 packet_title = Label(text="Text Packet:", bg=darkish, fg=whitish).grid(row=11, column=4)
