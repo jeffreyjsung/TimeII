@@ -1,22 +1,15 @@
 import serial
 import time
 from tkinter import *
+from tkinter import ttk
 import random
 import sys
 import glob
+
+from formatting import *
 from PIL import Image, ImageTk
 
-i = 0
-root = Tk()
-
-# Colors
-darkish = '#%02x%02x%02x' % (29, 30, 38)
-whitish = '#%02x%02x%02x' % (214, 216, 218)
-code_green = '#%02x%02x%02x' % (80, 200, 70)
-code_green_light = '#%02x%02x%02x' % (170, 200, 150)
-code_dark = '#%02x%02x%02x' % (23, 24, 30)
-
-
+# Simulator class stores relevant information
 class sim:
     simRunning = False
     simStart = False
@@ -25,25 +18,16 @@ class sim:
     msgOld = ""
     timesTen = False
 
-
 flightSim = sim
 
+# Is the simulation running at x10 speed
 timesTen = False
 
-root.configure(bg=darkish)
-
-w = Label(root, text="Blue Origin Flight Simulator", font='Helvetica 20 bold', bg=darkish, fg=whitish).grid(row=0, column=0, columnspan=6, padx=10)
-
-text_packet = Label(text="", bg=darkish, fg=whitish).grid(row=18, column=4)
-packet_title = Label(text="Text Packet:", bg=darkish, fg=whitish).grid(row=11, column=4)
-restart = Button(root, text="Restart", font='Helvetica 15 bold', bg=darkish, highlightbackground=darkish, highlightthickness=30, foreground=whitish).grid(row=0, column=5)
 connected = False
 exp_time = 0
 
 simRunning = False
 simStart = False
-
-arduinoOutput = Label(text="Arduino Output   \n", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=19, column=4)
 
 try:
     s = serial.Serial('/dev/tty.usbmodem1411', 115200, timeout=5)  # BlueOrigin specifies 115,200 baud rate
@@ -63,7 +47,6 @@ def expUpdate(thing, time1, time2, max):
     timeNum = ((max - thing.get())/(time2-time1))
     if (flightSim.exp_time > time1 and flightSim.exp_time < time2):
         thing.set(thing.get() + timeNum)
-
 
 def running():
 
@@ -100,7 +83,11 @@ def running():
             liftoff_warning.set(1)
             status.set('@')
 
+
         if flightSim.simRunning:
+
+            #TODO: Change max time
+            progress['value'] = flightSim.exp_time/3.07
 
             linearUpdate(altitude, 7, 135, 142706-3750)
             linearUpdate(altitude, 135, 153, 195343-142706)
@@ -221,6 +208,9 @@ chute_warning = IntVar()    # 19
 landing_warning = IntVar()  # 20
 fault_warning = IntVar()    # 21
 
+
+# GUI labels and fields
+
 Label(root, text="Flight Status", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=0, padx=30)
 Label(root, text="Warnings", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=1)
 Label(root, text="Values", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=2)
@@ -291,15 +281,7 @@ output = Frame(root, width=600, height=150, bg=code_dark).grid(row=20, column=4,
 
 info = Frame(root, width=600, height=150, bg=code_dark).grid(row=2, rowspan=7, column=4, sticky='e', padx=20)
 msg = Label(root, text="", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=2, rowspan=7, column=4, sticky='e', padx=20)
-# display everything
 
-root.title("BlueOrigin FlightSim")
-
-top = root.winfo_toplevel()
-menuBar = Menu(top)
-top['menu'] = menuBar
-subMenu = Menu(menuBar)
-portMenu = Menu(menuBar)
 
 def normalSpeed():
     flightSim.timesTen = False
