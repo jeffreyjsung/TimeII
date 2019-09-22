@@ -8,7 +8,7 @@
 
 int flightStatus = PRELAUNCH;
 double flightTime = 0;
-char value;
+char leftBound;
 
 void setup() {
   Serial.begin(115200);     // opens serial port, sets baudrate to 115200 bps
@@ -18,23 +18,26 @@ void setup() {
 void loop() {
   while (Serial.available()){
     if (Serial.available() > 0){
-      value = Serial.read();
-      if (value == '['){
+      leftBound = Serial.read();
+      if (leftBound == '['){
         char status = Serial.read();
-        if (status == 'A'){
-          flightStatus = LIFTOFF;
-        }
-        else if (status == 'D'){
-          flightStatus = MGRAV_BEGIN;
-        }
-        else if (status == 'F'){
-          flightStatus = MGRAV_END;
-        }
-        else if (status == 'H'){
-          flightStatus = LANDING;
-        }
-        else if (status == 'J'){
-          flightStatus = FINISHED;
+        char rightBound = Serial.read();
+        if (rightBound == ','){
+          if (status == 'A'){
+            flightStatus = LIFTOFF;
+          }
+          else if (status == 'D'){
+            flightStatus = MGRAV_BEGIN;
+          }
+          else if (status == 'F'){
+            flightStatus = MGRAV_END;
+          }
+          else if (status == 'H'){
+            flightStatus = LANDING;
+          }
+          else if (status == 'J'){
+            flightStatus = FINISHED;
+          }
         }
       }
     }
