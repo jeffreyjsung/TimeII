@@ -5,6 +5,7 @@ from tkinter import ttk
 import random
 import sys
 import glob
+import os
 
 from formatting import *
 from PIL import Image, ImageTk
