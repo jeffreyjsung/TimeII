@@ -25,10 +25,18 @@ w = Label(root, text="Blue Origin Flight Simulator", font='Helvetica 20 bold', b
 
 text_packet = Label(text="", bg=darkish, fg=whitish).grid(row=18, column=4)
 
-progress = ttk.Progressbar(root, orient=HORIZONTAL, length=600, mode='determinate')
+
+# Style
+s = ttk.Style()
+s.theme_use('clam')
+s.configure("green.Horizontal.TProgressbar",  troughcolor=code_dark, bordercolor=code_dark, background=code_green, lightcolor=code_green, darkcolor=code_dark)
+
+
+
+progress = ttk.Progressbar(root, style="green.Horizontal.TProgressbar", orient=HORIZONTAL, length=600, mode='determinate')
 progress.grid(row=8, column=4)
 #progress.start()
-progress['value'] = 30
+
 
 packet_title = Label(text="Text Packet:", font ='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=11, column=4)
 restart = Button(root, text="Restart", font='Helvetica 15 bold', bg=darkish, highlightbackground=darkish, highlightthickness=30, foreground=whitish).grid(row=0, column=5)
