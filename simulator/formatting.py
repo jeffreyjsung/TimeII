@@ -14,7 +14,7 @@ code_dark = '#%02x%02x%02x' % (23, 24, 30)
 root = Tk()
 root.configure(bg=darkish)
 
-root.title("BlueOrigin FlightSim")
+root.title("Time II Flight Simulator")
 
 # display everything
 top = root.winfo_toplevel()
@@ -23,7 +23,7 @@ top['menu'] = menuBar
 subMenu = Menu(menuBar)
 portMenu = Menu(menuBar)
 
-w = Label(root, text="Blue Origin Flight Simulator", font='Helvetica 20 bold', bg=darkish, fg=whitish).grid(row=0, column=0, columnspan=6, padx=10)
+w = Label(root, text="Time II Flight Simulator", font='Helvetica 20 bold', bg=darkish, fg=whitish).grid(row=0, column=0, columnspan=6, padx=10)
 
 text_packet = Label(text="", bg=darkish, fg=whitish).grid(row=18, column=4)
 
@@ -40,7 +40,7 @@ progress.grid(row=8, column=4)
 packet_title = Label(text="Text Packet:", font ='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=11, column=4)
 restart = Button(root, text="Restart", font='Helvetica 15 bold', bg=darkish, highlightbackground=darkish, highlightthickness=30, foreground=whitish).grid(row=0, column=5)
 
-arduinoOutput = Label(text="Arduino Output   \n", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=19, column=4)
+hardwareOutput = Label(text="Microprocessor Output   \n", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=19, column=4)
 
 #logo
 logo_path = os.path.join(os.getcwd(), 'logo.png')

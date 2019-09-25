@@ -19,6 +19,7 @@ void setup() {
 }
 
 void loop() {
+<<<<<<< HEAD
   while (Serial.available()) {
     if (Serial.available() > 0) {
       currentChar = Serial.read();
@@ -27,11 +28,44 @@ void loop() {
         flightStatus = pollStatus(flightStatus);
       } else if (currentChar == ']') {
         bracketEnded = true;
+=======
+  while (Serial.available()){
+    if (Serial.available() > 0){
+      leftBound = Serial.read();
+      if (leftBound == '['){
+        char status = Serial.read();
+        char rightBound = Serial.read();
+        if (rightBound == ','){
+          if (status == 'A'){
+            flightStatus = LIFTOFF;
+          }
+          else if (status == 'D'){
+            flightStatus = MGRAV_BEGIN;
+          }
+          else if (status == 'F'){
+            flightStatus = MGRAV_END;
+          }
+          else if (status == 'H'){
+            flightStatus = LANDING;
+          }
+          else if (status == 'J'){
+            flightStatus = FINISHED;
+          }
+          char mark = Serial.read();
+          String time = "";
+          while (mark != ',') {
+            time += mark;
+            mark = Serial.read();
+          }
+          flightTime = time.toDouble();
+        }
+>>>>>>> edff02d93aaa2de5c5394668bf8bf85b61a32dfe
       }
     }
   }
 }
 
+<<<<<<< HEAD
 int pollStatus(currentStatus) {
   char statusChar = Serial.read();
   char rightBound = Serial.read();
@@ -53,4 +87,7 @@ int pollStatus(currentStatus) {
     }
   }
   return currentStatus;
+=======
+
+>>>>>>> edff02d93aaa2de5c5394668bf8bf85b61a32dfe
 }
