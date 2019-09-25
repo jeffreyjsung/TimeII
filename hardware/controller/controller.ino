@@ -9,40 +9,48 @@
 int flightStatus = PRELAUNCH;
 double flightTime = 0;
 char leftBound;
+bracketEnded = true;
+
+int pollStatus(currentStatus); //reads the next two serial inputs and returns if valid format
 
 void setup() {
   Serial.begin(115200);     // opens serial port, sets baudrate to 115200 bps
-  
+
 }
 
 void loop() {
-  while (Serial.available()){
-    if (Serial.available() > 0){
-      leftBound = Serial.read();
-      if (leftBound == '['){
-        char status = Serial.read();
-        char rightBound = Serial.read();
-        if (rightBound == ','){
-          if (status == 'A'){
-            flightStatus = LIFTOFF;
-          }
-          else if (status == 'D'){
-            flightStatus = MGRAV_BEGIN;
-          }
-          else if (status == 'F'){
-            flightStatus = MGRAV_END;
-          }
-          else if (status == 'H'){
-            flightStatus = LANDING;
-          }
-          else if (status == 'J'){
-            flightStatus = FINISHED;
-          }
-        }
+  while (Serial.available()) {
+    if (Serial.available() > 0) {
+      currentChar = Serial.read();
+      if (currentChar == '[') {
+        bracketEnded = false;
+        flightStatus = pollStatus(flightStatus);
+      } else if (currentChar == ']') {
+        bracketEnded = true;
       }
     }
   }
+}
 
-
-   
+int pollStatus(currentStatus) {
+  char statusChar = Serial.read();
+  char rightBound = Serial.read();
+  if (rightBound == ',') {
+    if (statusChar == 'A') {
+      currentStatus = LIFTOFF;
+    }
+    else if (statusChar == 'D') {
+      currentStatus = MGRAV_BEGIN;
+    }
+    else if (statusChar == 'F') {
+      currentStatus = MGRAV_END;
+    }
+    else if (statusChar == 'H') {
+      currentStatus = LANDING;
+    }
+    else if (statusChar == 'J') {
+      currentStatus = FINISHED;
+    }
+  }
+  return currentStatus;
 }
