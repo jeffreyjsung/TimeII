@@ -34,7 +34,7 @@ try:
     s = serial.Serial('/dev/tty.usbmodem1411', 115200, timeout=5)  # BlueOrigin specifies 115,200 baud rate
     connected = True
 except:
-    errorText = Label(text="Can't connect to /dev/tty.usbmodem1411", fg="red", bg=darkish).grid(row=21, column=4)
+    errorText = Label(text="Can't connect to /dev/tty.usbmodem1411", fg="red", bg=darkish).grid(row=21, column=0)
 
 
 def linearUpdate(thing, time1, time2, dist):
@@ -53,18 +53,18 @@ def running():
 
     msgSim = Label(root, text=flightSim.msg, font='Helvetica 18 bold', bg=code_dark,
                    fg=code_green)
-    msgSim.grid(row=5, rowspan=7, column=4, sticky="n")
+    msgSim.grid(row=5, rowspan=7, column=0, sticky="n")
 
     msgSimOld = Label(root, text=flightSim.msg, font='Helvetica 16 italic', bg=code_dark,
                    fg=code_green_light)
-    msgSimOld.grid(row=4, rowspan=7, column=4, sticky="n")
+    msgSimOld.grid(row=4, rowspan=7, column=0, sticky="n")
 
     text_packet = Label(text="", font='Helvetica 17 bold', bg=darkish, fg=code_green)
-    text_packet.grid(row=12, column=4)
+    text_packet.grid(row=12, column=0)
     expTime = Label(text="Experimental Time : " + "%.1f seconds" % flightSim.exp_time, font='Helvetica 18 bold',
                     bg=darkish, fg=whitish)
 
-    expTime.grid(row=2, column=4)
+    expTime.grid(row=2, column=0)
 
     buffer = 0.1
 
@@ -211,77 +211,80 @@ fault_warning = IntVar()    # 21
 
 
 # GUI labels and fields
+status_column = 1
+warning_column = 2
+values_column = 3
 
-Label(root, text="Flight Status", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=0, padx=30)
-Label(root, text="Warnings", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=1)
-Label(root, text="Values", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=2)
+Label(root, text="Flight Status", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=status_column, padx=30)
+Label(root, text="Warnings", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=warning_column)
+Label(root, text="Values", font='Helvetica 16 bold', bg=darkish, fg=whitish).grid(row=2, column=values_column)
 
-c2 = Checkbutton(root, text='RCS Warning', variable=rcs_warning, bg=darkish, fg=whitish).grid(row=3, column=1, sticky='w', padx=60)
+c2 = Checkbutton(root, text='RCS Warning', variable=rcs_warning, bg=darkish, fg=whitish).grid(row=3, column=warning_column, sticky='w', padx=60)
 
-c3 = Checkbutton(root, text='Escape Warning', variable=escape_warning, bg=darkish, fg=whitish).grid(row=4, column=1, sticky='w', padx=60)
+c3 = Checkbutton(root, text='Escape Warning', variable=escape_warning, bg=darkish, fg=whitish).grid(row=4, column=warning_column, sticky='w', padx=60)
 
-c4 = Checkbutton(root, text='Chute Warning', variable=chute_warning, bg=darkish, fg=whitish).grid(row=5, column=1, sticky='w', padx=60)
+c4 = Checkbutton(root, text='Chute Warning', variable=chute_warning, bg=darkish, fg=whitish).grid(row=5, column=warning_column, sticky='w', padx=60)
 
-c5 = Checkbutton(root, text='Landing Warning', variable=landing_warning, bg=darkish, fg=whitish).grid(row=6, column=1, sticky='w', padx=60)
+c5 = Checkbutton(root, text='Landing Warning', variable=landing_warning, bg=darkish, fg=whitish).grid(row=6, column=warning_column, sticky='w', padx=60)
 
-c6 = Checkbutton(root, text='Fault Warning', variable=fault_warning, bg=darkish, fg=whitish).grid(row=7, column=1, sticky='w', padx=60)
+c6 = Checkbutton(root, text='Fault Warning', variable=fault_warning, bg=darkish, fg=whitish).grid(row=7, column=warning_column, sticky='w', padx=60)
 
-c7 = Checkbutton(root, text='Liftoff Warning', variable=liftoff_warning, bg=darkish, fg=whitish).grid(row=8, column=1, sticky='w', padx=60)
+c7 = Checkbutton(root, text='Liftoff Warning', variable=liftoff_warning, bg=darkish, fg=whitish).grid(row=8, column=warning_column, sticky='w', padx=60)
 
 # Flight Status
 
-R1 = Radiobutton(root, text="None Reached", variable=status, value='@', bg=darkish, fg=whitish).grid(row=3, column=0, sticky='w', padx=60)
+R1 = Radiobutton(root, text="None Reached", variable=status, value='@', bg=darkish, fg=whitish).grid(row=3, column=status_column, sticky='w', padx=60)
 status.set('@')
 
-R2 = Radiobutton(root, text="Liftoff", variable=status, value='A', bg=darkish, fg=whitish).grid(row=4, column=0, sticky='w', padx=60)
+R2 = Radiobutton(root, text="Liftoff", variable=status, value='A', bg=darkish, fg=whitish).grid(row=4, column=status_column, sticky='w', padx=60)
 
-R3 = Radiobutton(root, text="Meco", variable=status, value='B', bg=darkish, fg=whitish).grid(row=5, column=0, sticky='w', padx=60)
+R3 = Radiobutton(root, text="Meco", variable=status, value='B', bg=darkish, fg=whitish).grid(row=5, column=status_column, sticky='w', padx=60)
 
-R4 = Radiobutton(root, text="Coast_Start", variable=status, value='C', bg=darkish, fg=whitish).grid(row=6, column=0, sticky='w', padx=60)
+R4 = Radiobutton(root, text="Coast_Start", variable=status, value='C', bg=darkish, fg=whitish).grid(row=6, column=status_column, sticky='w', padx=60)
 
-R5 = Radiobutton(root, text="Separation", variable=status, value='D', bg=darkish, fg=whitish).grid(row=7, column=0, sticky='w', padx=60)
+R5 = Radiobutton(root, text="Separation", variable=status, value='D', bg=darkish, fg=whitish).grid(row=7, column=status_column, sticky='w', padx=60)
 
-R6 = Radiobutton(root, text="Apogee", variable=status, value='E', bg=darkish, fg=whitish).grid(row=8, column=0, sticky='w', padx=60)
+R6 = Radiobutton(root, text="Apogee", variable=status, value='E', bg=darkish, fg=whitish).grid(row=8, column=status_column, sticky='w', padx=60)
 
-R7 = Radiobutton(root, text="Coast_End", variable=status, value='F', bg=darkish, fg=whitish).grid(row=9, column=0, sticky='w', padx=60)
+R7 = Radiobutton(root, text="Coast_End", variable=status, value='F', bg=darkish, fg=whitish).grid(row=9, column=status_column, sticky='w', padx=60)
 
-R8 = Radiobutton(root, text="Under_Chutes", variable=status, value='G', bg=darkish, fg=whitish).grid(row=10, column=0, sticky='w', padx=60)
+R8 = Radiobutton(root, text="Under_Chutes", variable=status, value='G', bg=darkish, fg=whitish).grid(row=10, column=status_column, sticky='w', padx=60)
 
-R9 = Radiobutton(root, text="Landing", variable=status, value='H', bg=darkish, fg=whitish).grid(row=11, column=0, sticky='w', padx=60)
+R9 = Radiobutton(root, text="Landing", variable=status, value='H', bg=darkish, fg=whitish).grid(row=11, column=status_column, sticky='w', padx=60)
 
-R10 = Radiobutton(root, text="Safing", variable=status, value='I', bg=darkish, fg=whitish).grid(row=12, column=0, sticky='w', padx=60)
+R10 = Radiobutton(root, text="Safing", variable=status, value='I', bg=darkish, fg=whitish).grid(row=12, column=status_column, sticky='w', padx=60)
 
-R11 = Radiobutton(root, text="Finished", variable=status, value='J', bg=darkish, fg=whitish).grid(row=13, column=0, sticky='w', padx=60)
+R11 = Radiobutton(root, text="Finished", variable=status, value='J', bg=darkish, fg=whitish).grid(row=13, column=status_column, sticky='w', padx=60)
 
 # Values
 
-l1 = Label(root, text="Velocity X-Axis               ", bg=darkish, fg=whitish).grid(row=3, column=2, sticky='w')
-e1 = Entry(root, text="Velocity X-Axis               ", bg=darkish, fg=whitish, textvariable=x_vel, width=4, highlightbackground=code_dark).grid(row=3, column=2, sticky='e', padx=20)
-l2 = Label(root, text="Velocity Y-Axis               ", bg=darkish, fg=whitish).grid(row=4, column=2, sticky='w')
-e2 = Entry(root, text="Velocity Y-Axis               ", bg=darkish, fg=whitish, textvariable=y_vel, width=4, highlightbackground=code_dark).grid(row=4, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Velocity Z-Axis               ", bg=darkish, fg=whitish).grid(row=5, column=2, sticky='w')
-e3 = Entry(root, text="Velocity Z-Axis               ", bg=darkish, fg=whitish, textvariable=z_vel, width=4, highlightbackground=code_dark).grid(row=5, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Acceleration                  ", bg=darkish, fg=whitish).grid(row=6, column=2, sticky='w')
-e4 = Entry(root, text="Acceleration                  ", bg=darkish, fg=whitish, textvariable=acceleration, width=4, highlightbackground=code_dark).grid(row=6, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Altitude                      ", bg=darkish, fg=whitish).grid(row=7, column=2, sticky='w')
-e5 = Entry(root, text="Altitude                      ", bg=darkish, fg=whitish, textvariable=altitude, width=4, highlightbackground=code_dark).grid(row=7, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Angular Velocity X-Axis       ", bg=darkish, fg=whitish).grid(row=8, column=2, sticky='w')
-e1 = Entry(root, text="Angular Velocity X-Axis       ", bg=darkish, fg=whitish, textvariable=x_ang_vel, width=4, highlightbackground=code_dark).grid(row=8, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Angular Velocity Y-Axis       ", bg=darkish, fg=whitish).grid(row=9, column=2, sticky='w')
-e2 = Entry(root, text="Angular Velocity Y-Axis       ", bg=darkish, fg=whitish, textvariable=y_ang_vel, width=4, highlightbackground=code_dark).grid(row=9, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Angular Velocity Z-Axis       ", bg=darkish, fg=whitish).grid(row=10, column=2, sticky='w')
-e3 = Entry(root, text="Angular Velocity Z-Axis       ", bg=darkish, fg=whitish, textvariable=z_ang_vel, width=4, highlightbackground=code_dark).grid(row=10, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Attitude X-Axis               ", bg=darkish, fg=whitish).grid(row=11, column=2, sticky='w')
-e1 = Entry(root, text="Attitude X-Axis               ", bg=darkish, fg=whitish, textvariable=x_att, width=4, highlightbackground=code_dark).grid(row=11, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Attitude Y-Axis               ", bg=darkish, fg=whitish).grid(row=12, column=2, sticky='w')
-e2 = Entry(root, text="Attitude Y-Axis               ", bg=darkish, fg=whitish, textvariable=y_att, width=4, highlightbackground=code_dark).grid(row=12, column=2, sticky='e', padx=20)
-l1 = Label(root, text="Attitude Z-Axis               ", bg=darkish, fg=whitish).grid(row=13, column=2, sticky='w')
-e3 = Entry(root, text="Attitude Z-Axis               ", bg=darkish, fg=whitish, textvariable=z_att, width=4, highlightbackground=code_dark).grid(row=13, column=2, sticky='e', padx=20)
+l1 = Label(root, text="Velocity X-Axis               ", bg=darkish, fg=whitish).grid(row=3, column=values_column, sticky='w')
+e1 = Entry(root, text="Velocity X-Axis               ", bg=darkish, fg=whitish, textvariable=x_vel, width=4, highlightbackground=code_dark).grid(row=3, column=values_column, sticky='e', padx=20)
+l2 = Label(root, text="Velocity Y-Axis               ", bg=darkish, fg=whitish).grid(row=4, column=values_column, sticky='w')
+e2 = Entry(root, text="Velocity Y-Axis               ", bg=darkish, fg=whitish, textvariable=y_vel, width=4, highlightbackground=code_dark).grid(row=4, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Velocity Z-Axis               ", bg=darkish, fg=whitish).grid(row=5, column=values_column, sticky='w')
+e3 = Entry(root, text="Velocity Z-Axis               ", bg=darkish, fg=whitish, textvariable=z_vel, width=4, highlightbackground=code_dark).grid(row=5, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Acceleration                  ", bg=darkish, fg=whitish).grid(row=6, column=values_column, sticky='w')
+e4 = Entry(root, text="Acceleration                  ", bg=darkish, fg=whitish, textvariable=acceleration, width=4, highlightbackground=code_dark).grid(row=6, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Altitude                      ", bg=darkish, fg=whitish).grid(row=7, column=values_column, sticky='w')
+e5 = Entry(root, text="Altitude                      ", bg=darkish, fg=whitish, textvariable=altitude, width=4, highlightbackground=code_dark).grid(row=7, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Angular Velocity X-Axis       ", bg=darkish, fg=whitish).grid(row=8, column=values_column, sticky='w')
+e1 = Entry(root, text="Angular Velocity X-Axis       ", bg=darkish, fg=whitish, textvariable=x_ang_vel, width=4, highlightbackground=code_dark).grid(row=8, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Angular Velocity Y-Axis       ", bg=darkish, fg=whitish).grid(row=9, column=values_column, sticky='w')
+e2 = Entry(root, text="Angular Velocity Y-Axis       ", bg=darkish, fg=whitish, textvariable=y_ang_vel, width=4, highlightbackground=code_dark).grid(row=9, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Angular Velocity Z-Axis       ", bg=darkish, fg=whitish).grid(row=10, column=values_column, sticky='w')
+e3 = Entry(root, text="Angular Velocity Z-Axis       ", bg=darkish, fg=whitish, textvariable=z_ang_vel, width=4, highlightbackground=code_dark).grid(row=10, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Attitude X-Axis               ", bg=darkish, fg=whitish).grid(row=11, column=values_column, sticky='w')
+e1 = Entry(root, text="Attitude X-Axis               ", bg=darkish, fg=whitish, textvariable=x_att, width=4, highlightbackground=code_dark).grid(row=11, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Attitude Y-Axis               ", bg=darkish, fg=whitish).grid(row=12, column=values_column, sticky='w')
+e2 = Entry(root, text="Attitude Y-Axis               ", bg=darkish, fg=whitish, textvariable=y_att, width=4, highlightbackground=code_dark).grid(row=12, column=values_column, sticky='e', padx=20)
+l1 = Label(root, text="Attitude Z-Axis               ", bg=darkish, fg=whitish).grid(row=13, column=values_column, sticky='w')
+e3 = Entry(root, text="Attitude Z-Axis               ", bg=darkish, fg=whitish, textvariable=z_att, width=4, highlightbackground=code_dark).grid(row=13, column=values_column, sticky='e', padx=20)
 
-output = Frame(root, width=600, height=150, bg=code_dark).grid(row=20, column=4, sticky='e', padx=20)
+output = Frame(root, width=600, height=150, bg=code_dark).grid(row=20, column=0, sticky='e', padx=20)
 
-info = Frame(root, width=600, height=150, bg=code_dark).grid(row=2, rowspan=7, column=4, sticky='e', padx=20)
-msg = Label(root, text="", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=2, rowspan=7, column=4, sticky='e', padx=20)
+info = Frame(root, width=600, height=150, bg=code_dark).grid(row=2, rowspan=7, column=0, sticky='e', padx=20)
+msg = Label(root, text="", font='Helvetica 18 bold', bg=darkish, fg=whitish).grid(row=2, rowspan=7, column=0, sticky='e', padx=20)
 
 
 def normalSpeed():
