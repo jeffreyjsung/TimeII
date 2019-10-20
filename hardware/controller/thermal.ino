@@ -6,7 +6,6 @@ int driver_pin = 3;
 //Later define pins for driver, etc.
 
 float temp_obj = 37; //Celsius
-int range = 3; //Allowable range of temperatures
 
 float PID_error = 0;
 float prev_error = 0;
@@ -37,7 +36,7 @@ void setup() {
 
 void loop() {
   float current_temp = readTemp();
-  PID_error = temp_obj - current_temp + range;
+  PID_error = temp_obj - current_temp;
   PID_p = k_p*PID_error;
   PID_i = PID_i + k_i*PID_error;
 
