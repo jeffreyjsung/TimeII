@@ -6,60 +6,73 @@
 #define LANDING 4
 #define FINISHED 5
 
+#define END_CHAR ']'
+
 int currentStatus = PRELAUNCH;
 double flightTime = 0;
-char leftBound;
+char statuschar = "@";
 
-int pollStatus() {
-  int flightStatus = currentStatus;
-  char statusChar = Serial.read();
-  char rightBound = Serial.read();
-  if (rightBound == ',') {
-    if (statusChar == 'A') {
-      flightStatus = LIFTOFF;
-    }
-    else if (statusChar == 'D') {
-      flightStatus = MGRAV_BEGIN;
-    }
-    else if (statusChar == 'F') {
-      flightStatus = MGRAV_END;
-    }
-    else if (statusChar == 'H') {
-      flightStatus = LANDING;
-    }
-    else if (statusChar == 'J') {
-      flightStatus = FINISHED;
+bool is_input() {
+  return (Serial.available());
+}
+
+bool is_ended(char end_char){
+  return (end_char == ']');
+}
+
+void wait_until_char(char begin_char) {
+  while (Serial.read() != begin_char); // wait until begin_char
+}
+
+
+
+char get_packet(int pos_input) {
+  char contents[100];
+  //wait until beginning char
+  wait_until_char('[');
+  for(int i = 0; i < 99; i++){
+    contents[i] = char(Serial.read());
+    if(is_ended(contents[i])){
+      contents[i] = '\0';
+      break;
     }
   }
-  return flightStatus;
+  Serial.println("GOT HERE");
+  //check until past comma tracker and get until next comma flag
+  int status_index = 0;
+  char contents_buffer[100];
+  char statusChar[1];
+  char timeChar[10];
+  while (contents[index] != ',') {
+    while (contents[index] != ',') {
+      statusChar[index] = contents[index];
+      index += 1;
+    }
+    timeChar[index] = contents[index];
+    index += 1;
+  }
+  //current contents_buffer contains char for currentStatus
+  
+  
+  for(comma_tracker = 0; comma_tracker <= pos_input; )
+}
+
+int pollStatus() {
+  
 }
 
 double experimentTime() {
-  char mark = Serial.read();
-  String time = "";
-  while (mark != ',') {
-    time += mark;
-    mark = Serial.read();
-  }
-  return time.toDouble();
+  
 }
 
 void setup() {
-  Serial.begin(115200);     // opens serial port, sets baudrate to 115200 bps
-
+  Serial.begin(115200);
 }
-
+ 
 void loop() {
-  while (Serial.available()) {
-    if (Serial.available() > 0) {
-      char currentChar = Serial.read();
-      if (currentChar == '[') {
-        currentStatus = pollStatus();
-        flightTime = experimentTime();
-      }
-    }
+  if (! is_input()){
+    return;
   }
+  Serial.println(get_packet());
+  //Serial.println("YOLO"); // printed yolo without input, perhaps because of Serial.begin???
 }
-
-
-
