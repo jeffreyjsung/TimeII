@@ -30,11 +30,32 @@ exp_time = 0
 simRunning = False
 simStart = False
 
-try:
+if sys.platform.startswith('win'):
+    ports = ['COM%s' % (i + 1) for i in range(256)] #checks windows ports
+elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+    ports = glob.glob('/dev/tty[A-Za-z]*') #checks for anything starting with /dev/tty
+elif sys.platform.startswith('darwin'):
+    ports = glob.glob('/dev/tty.*')
+else:
+    raise EnvironmentError('Your platform is not supported')
+
+for port in ports:
+    try:
+        s = serial.Serial(port, 115200, timeout=5)
+        s.close()
+        portMenu.add_command(label=port)
+        connected = True
+        #REMOVE
+        s = serial.Serial(port, 115200, timeout=5)
+        break #REMOVE THIS ASAP
+    except (OSError, serial.SerialException):
+        pass
+
+'''try:
     s = serial.Serial('/dev/tty.usbmodem1411', 115200, timeout=5)  # BlueOrigin specifies 115,200 baud rate
     connected = True
 except:
-    errorText = Label(text="Can't connect to /dev/tty.usbmodem1411", fg="red", bg=darkish).grid(row=21, column=0)
+    errorText = Label(text="Can't connect to /dev/tty.usbmodem1411", fg="red", bg=darkish).grid(row=21, column=0)'''
 
 
 def linearUpdate(thing, time1, time2, dist):
@@ -156,10 +177,10 @@ def running():
         time.sleep(.1)  # data sent at 10Hz
 
 
-        text = ('['+status.get() + "," + "%.2f," % flightSim.exp_time
+        text = (status.get() + "," + "%.2f," % flightSim.exp_time
                 + "%.6f" % altitude.get() + ','
                 + "%.6f" % x_vel.get() + ',' + "%.6f" % y_vel.get() + ',' + "%.6f" % z_vel.get() + ','
-                + str(acceleration.get()) + ',\n0.000000,0.000000'
+                + str(acceleration.get()) + ',0.000000,0.000000'
 
                 # Attitude is orientation with respect to an inertial frame of reference
                 + str(x_att.get()) + ',' + str(y_att.get()) + ',' + str(z_att.get()) + ','
@@ -171,16 +192,19 @@ def running():
                 + str(escape_warning.get()) + ','
                 + str(chute_warning.get()) + ','
                 + str(landing_warning.get())
-                + ',' + str(fault_warning.get())+']')
+                + ',' + str(fault_warning.get()) + '\0')
 
-        text_packet.config(text=text)
+        display_text = text[:len(text)//2] + '\n'+ text[len(text)//2:]
+
+        text_packet.config(text=display_text)
+
         expTime.config(text="Experimental Time : " + "%.1f seconds" % flightSim.exp_time)
         msgSim.config(text=flightSim.msg)
         msgSimOld.config(text=flightSim.msgOld)
 
-
         if connected:
-            s.write(text)
+            s.write(text.encode("ascii"))
+            print(text.encode("ascii"))
         root.update_idletasks()
         root.update()
 
@@ -308,22 +332,7 @@ subMenu.add_command(label='Regular Speed', command=normalSpeed)
 
 menuBar.add_cascade(label='Ports', menu=portMenu)
 
-if sys.platform.startswith('win'):
-    ports = ['COM%s' % (i + 1) for i in range(256)] #checks windows ports
-elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-    ports = glob.glob('/dev/tty[A-Za-z]*') #checks for anything starting with /dev/tty
-elif sys.platform.startswith('darwin'):
-    ports = glob.glob('/dev/tty.*')
-else:
-    raise EnvironmentError('Your platform is not supported')
 
-for port in ports:
-    try:
-        s = serial.Serial(port)
-        s.close()
-        portMenu.add_command(label=port)
-    except (OSError, serial.SerialException):
-        pass
 
 
 #create window for viewing
