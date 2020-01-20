@@ -24,10 +24,6 @@ int k_d = 80;
 float current_time = 0;
 float prev_time = 0;
 
-float readTemp() {
-  //Implement later
-}
-
 void setup() {
   pinMode(driver_pin, OUTPUT);
   current_time = millis();
@@ -35,6 +31,14 @@ void setup() {
 }
 
 void loop() {
+  PID_loop();
+}
+
+float readTemp() {
+  //Implement later
+}
+
+void PID_loop() {
   float current_temp = readTemp();
   PID_error = temp_obj - current_temp;
   PID_p = k_p*PID_error;
@@ -51,3 +55,4 @@ void loop() {
 
   prev_error = PID_error;
 }
+
