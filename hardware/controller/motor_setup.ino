@@ -1,17 +1,29 @@
-#include <Servo.h> 
+/*  MP6500 Motor Driver
+ *  Adjust to fit servo
+*/
 
-int servoPin = 10; 
-Servo Servo1; 
 
-int findDist(float distance, float circumference) {
-  return distance / circumference * 360.0;
-}
+//Motor driver pins - assign later
+const int STEP; //step input
+const int DIR; //direction input
+const int nSLEEP; //sleep mode input
 
 void setup() {
-   Servo1.attach(servoPin);
+  pinMode(STEP, INPUT);
+  pinMode(DIR, INPUT);
+  pinMode(nSLEEP, INPUT);
 }
 
 void loop(){
-   // Make servo go to 0 degrees
-   Servo1.write(0);
 }
+
+void activateMotor(){
+  digitalWrite(nSLEEP, HIGH);
+  for (int i = 0; i < distance; i++) {
+    digitalWrite(STEP, HIGH);
+    delay(500);
+    digitalWrite(STEP, LOW);
+    delay(500);
+  }
+}
+
