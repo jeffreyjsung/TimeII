@@ -1,58 +1,31 @@
-//Thermal Regulation
-//Based on http://www.electronoobs.com/eng_arduino_tut24_code3.php
-#include <SPI.h>
+#define FIVE_VOLTS 972.0
 
-int driver_pin = 3;
-//Later define pins for driver, etc.
+//Temp Sensor Pins
+const int tempSensorOne = A0; 
 
-float temp_obj = 37; //Celsius
+float tempOne;
 
-float PID_error = 0;
-float prev_error = 0;
-float PID_value = 0;
-
-//Control terms
-float PID_p = 0;
-float PID_i = 0;
-float PID_d = 0;
-
-//Coefficients for control function - adjust as necessary
-int k_p = 90;
-int k_i = 30;
-int k_d = 80;
-
-float current_time = 0;
-float prev_time = 0;
 
 void setup() {
-  pinMode(driver_pin, OUTPUT);
-  current_time = millis();
-  //Later include setup for driver, etc.
+  Serial.begin(115200);
+  pinMode(A0, INPUT);
+  pinMode(A5, OUTPUT);
+  
+}
+
+bool atTemp(int pin) {
+  return (analogRead(A0) >= FIVE_VOLTS / 2.0);
 }
 
 void loop() {
-  PID_loop();
+  Serial.println(atTemp(A0));
+  if (!atTemp(A0)) {
+    digitalWrite(A5, HIGH);
+  } else {
+    digitalWrite(A5, LOW);
+  }
 }
 
-float readTemp() {
-  //Implement later
+float readTemp(int pin) {
+  return (1.0 / (1.0/298.15 + 1.0/3950.0 * log(1023.0/float(analogRead(pin)) - 1.0)) - 273.15);
 }
-
-void PID_loop() {
-  float current_temp = readTemp();
-  PID_error = temp_obj - current_temp;
-  PID_p = k_p*PID_error;
-  PID_i = PID_i + k_i*PID_error;
-
-  prev_time = current_time;
-  current_time = millis();
-  float delta_time = (current_time - prev_time)/1000;
-  PID_d = k_d*(PID_error - prev_error)/delta_time;
-
-  PID_value = PID_p + PID_i + PID_d;
-  
-  //Later write signal to driver
-
-  prev_error = PID_error;
-}
-
