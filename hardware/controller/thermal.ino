@@ -1,28 +1,28 @@
 #define FIVE_VOLTS 972.0
-
-//Temp Sensor Pins
-const int tempSensorOne = A0; 
+#define HEATER A5;
+#define TEMP_SENSOR_1 A0;
 
 float tempOne;
 
 
 void setup() {
   Serial.begin(115200);
-  pinMode(A0, INPUT);
-  pinMode(A5, OUTPUT);
+  pinMode(TEMP_SENSOR_1, INPUT);
+  pinMode(HEATER, OUTPUT);
   
 }
 
 bool atTemp(int pin) {
-  return (analogRead(A0) >= FIVE_VOLTS / 2.0);
+  // Should change to <= because of schematic
+  return (analogRead(pin) >= FIVE_VOLTS / 2.0);
 }
 
 void loop() {
-  Serial.println(atTemp(A0));
-  if (!atTemp(A0)) {
-    digitalWrite(A5, HIGH);
+  Serial.println(atTemp(TEMP_SENSOR_1));
+  if (!atTemp(TEMP_SENSOR_1)) {
+    digitalWrite(HEATER, HIGH);
   } else {
-    digitalWrite(A5, LOW);
+    digitalWrite(HEATER, LOW);
   }
 }
 
