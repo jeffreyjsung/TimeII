@@ -5,3 +5,7 @@ Flight Simulator: simulates sending flight-info text packets from a USB serial p
 Hardware code: written in C++ for the ATMEGA328P microprocessor (using the standard Arduino IDE/libraries)
 
 First iteration of PCB: https://easyeda.com/jbildy_1656/stac-time2
+
+
+## Sleep-Interrupt mode
+10/17/2020: New mode added, where the arduino sleeps until a Serial Interrupts wakes the arduino for operations.
