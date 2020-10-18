@@ -7,25 +7,42 @@
 #define FINISHED 5
 
 #define END_CHAR ']'
-
+/**Defaults the current status to prelaunch **/
 int currentStatus = PRELAUNCH;
+/**Defaults the flighttime to 0**/
 double flightTime = 0;
+/**Defaults the status to @ **/
 char statuschar = "@";
-
+//---------------------------------------------------------------------------------------
+/**	INPUTS: void
+	OUTPUTS: bool
+	FUNC: Returns True, if serial data is ready to be read, otherwise returns false.
+**/
 bool is_input() {
   return (Serial.available());
 }
-
+//----------------------------------------------------------------------------------------
+/**	INPUTS: char
+	OUTPUTS: bool
+	FUNC: Returns true if the given char is the end character, otherwise returns false. 
+**/
 bool is_ended(char end_char){
   return (end_char == ']');
 }
-
+//-----------------------------------------------------------------------------------------
+/**	INPUT: char
+	OUTPUT: void
+	FUNC: Reads from the serial port until until the parameter begin_char is reached. 
+**/
 void wait_until_char(char begin_char) {
-  while (Serial.read() != begin_char); // wait until begin_char
+  while (Serial.read() != begin_char); 
 }
-
-
-
+//------------------------------------------------------------------------------------------
+/**	INPUT: int
+	OUTPUT: char
+	FUNC: Waits until the serial sends a [, then stores serial input to a 100 byte buffer
+	until a ] is reached, effectively creating a string then ends the loop. 
+**/
 char get_packet(int pos_input) {
   char contents[100];
   //wait until beginning char
@@ -37,7 +54,7 @@ char get_packet(int pos_input) {
       break;
     }
   }
-  Serial.println("GOT HERE");
+  Serial.println("Serial read complete!");
   //check until past comma tracker and get until next comma flag
   int status_index = 0;
   char contents_buffer[100];
@@ -56,21 +73,26 @@ char get_packet(int pos_input) {
   
   for(comma_tracker = 0; comma_tracker <= pos_input; )
 }
-
+//-----------------------------------------------------------------------------
 int pollStatus() {
   
 }
-
+//-----------------------------------------------------------------------------
 double experimentTime() {
   
 }
-
+//-----------------------------------------------------------------------------
+/**	INPUT: void
+	OUTPUT: void
+	FUNC: Sets the baud rate in the serial port to 115200.
+**/
 void setup() {
   Serial.begin(115200);
 }
- 
+//-----------------------------------------------------------------------------
+/**Main loop of the arduino**/
 void loop() {
-  if (! is_input()){
+  if (!is_input()){
     return;
   }
   Serial.println(get_packet());
