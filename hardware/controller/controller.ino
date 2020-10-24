@@ -1,3 +1,4 @@
+/*
 // Flight status
 #define PRELAUNCH 0
 #define LIFTOFF 1
@@ -5,19 +6,36 @@
 #define MGRAV_END 3
 #define LANDING 4
 #define FINISHED 5
-
+*/
 #define END_CHAR ']'
+#define POWER_READ 0x33
+#define POWER_WRITE 0x53
+#include <stdint.h>
 /**Defaults the current status to prelaunch **/
 int currentStatus = PRELAUNCH;
 /**Defaults the flighttime to 0**/
 double flightTime = 0;
 /**Defaults the status to @ **/
 char statuschar = "@";
+//--------------------------------------------------------------------------------------
+//State Variables.
+//--------------------------------------------------------------------------------------
+enum STATE {
+SLEEP, MISSION, REGULATION
+};
+enum MISSION_STATES {
+  PRELAUNCH, LIFTOFF, MGRAV_BEGIN, MGRAV_END, LANDING, FINISHED
+};
+STATE volatile controller_state;
+MISSION_STATES volatile mission_status;
 //---------------------------------------------------------------------------------------
-/**	INPUTS: void
+//---------------------------------------------------------------------------------------
+// Functions for the serial interface.
+//---------------------------------------------------------------------------------------
+/*INPUTS: void
 	OUTPUTS: bool
 	FUNC: Returns True, if serial data is ready to be read, otherwise returns false.
-**/
+*/
 bool is_input() {
   return (Serial.available());
 }
@@ -69,9 +87,7 @@ char get_packet(int pos_input) {
     index += 1;
   }
   //current contents_buffer contains char for currentStatus
-  
-  
-  for(comma_tracker = 0; comma_tracker <= pos_input; )
+  for(int comma_tracker = 0; comma_tracker <= pos_input; )
 }
 //-----------------------------------------------------------------------------
 int pollStatus() {
@@ -82,14 +98,41 @@ double experimentTime() {
   
 }
 //-----------------------------------------------------------------------------
-/**	INPUT: void
-	OUTPUT: void
-	FUNC: Sets the baud rate in the serial port to 115200.
-**/
-void setup() {
-  Serial.begin(115200);
+//Sleep Functions
+//-----------------------------------------------------------------------------
+/*Sets the sleep mode to idle and enables sleep. 
+*****TURNS ON SLEEP WHEN WRITTEN!!*****/
+void setSleepMode() {
+  uint8_t* reg = POWER_WRITE;
+  *reg  = 0;
+  *reg |= 1;
 }
 //-----------------------------------------------------------------------------
+//Timer Functions
+//-----------------------------------------------------------------------------
+
+
+void timerInterruptHandler() {
+    controller_state = REGULATION;
+}
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+/*	INPUT: void
+	OUTPUT: void
+	FUNC: Sets the baud rate in the serial port to 115200.
+*/
+void setup() {
+  Serial.begin(115200);
+  STATE controller_state = SLEEP;
+  MISSION_STATES mission_status = PRELAUNCH;
+  float sleep_time_ms = 5000; 
+
+}
+//-----------------------------------------------------------------------------
+
+
+
+
 /**Main loop of the arduino**/
 void loop() {
   if (!is_input()){
@@ -97,4 +140,20 @@ void loop() {
   }
   Serial.println(get_packet());
   //Serial.println("YOLO"); // printed yolo without input, perhaps because of Serial.begin???
+
+  switch(controller_state) {
+    case SLEEP:
+      
+    break;
+
+    case MISSION:
+    break;
+
+    case REGULATION:
+    break;
+
+  }
+
+
+
 }
