@@ -10,13 +10,17 @@
 #define END_CHAR ']'
 #define POWER_READ 0x33
 #define POWER_WRITE 0x53
+
 #include <stdint.h>
+#include "motor_setup.h"
+
+
 /**Defaults the current status to prelaunch **/
 int currentStatus = PRELAUNCH;
 /**Defaults the flighttime to 0**/
 double flightTime = 0;
 /**Defaults the status to @ **/
-char statuschar = "@";
+char statuschar = (char) '@';
 //--------------------------------------------------------------------------------------
 //State Variables.
 //--------------------------------------------------------------------------------------
@@ -117,16 +121,15 @@ void timerInterruptHandler() {
 }
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-/*	INPUT: void
-	OUTPUT: void
-	FUNC: Sets the baud rate in the serial port to 115200.
-*/
+
+/*Sets the baud rate for the serial port, sets the initial FSM to SLEEP 
+and mission state to PRELAUNCH, and also setups the motor.*/
 void setup() {
   Serial.begin(115200);
   STATE controller_state = SLEEP;
   MISSION_STATES mission_status = PRELAUNCH;
-  float sleep_time_ms = 5000; 
-
+  float sleep_time_ms = 5000;
+  setupMotor(); 
 }
 //-----------------------------------------------------------------------------
 
