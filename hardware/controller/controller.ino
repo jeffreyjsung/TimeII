@@ -14,6 +14,8 @@
 #include <stdint.h>
 #include "motor_setup.h"
 #include "process_packet.h"
+#include "sd.h"
+#include "thermal.h"
 
 /**Defaults the current status to prelaunch **/
 int currentStatus = PRELAUNCH;
