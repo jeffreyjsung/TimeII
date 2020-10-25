@@ -14,9 +14,9 @@ the for loop of the arduino. Until all packets are received*/
 //How to know when all packets are received?
 void retrievePackets() {
   if (Serial.available()) {
-    get_valid_packet();
-    if (is_valid_packet()) {
-      get_status();
+    getValidPacket();
+    if (isValidPacket()) {
+      getStatus();
       if (current_packet[0] == 'C')
         digitalWrite(13, HIGH);
     }
