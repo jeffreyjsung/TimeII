@@ -16,6 +16,7 @@
 #include "process_packet.h"
 #include "sd.h"
 #include "thermal.h"
+#include "timer.h"
 
 /**Defaults the current status to prelaunch **/
 int currentStatus = PRELAUNCH;
@@ -132,6 +133,7 @@ void setup() {
   MISSION_STATES mission_status = PRELAUNCH;
   float sleep_time_ms = 5000;
   setupMotor(); 
+  setupTimer();
 }
 //-----------------------------------------------------------------------------
 
@@ -148,13 +150,16 @@ void loop() {
 
   switch(controller_state) {
     case SLEEP:
-      
+    
     break;
 
     case MISSION:
     break;
 
     case REGULATION:
+    //Check temperature and regulate
+    controlThermals();
+    STATE = SLEEP;
     break;
 
   }

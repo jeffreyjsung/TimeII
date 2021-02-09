@@ -2,8 +2,8 @@
 #define THERMAL
 
 #define FIVE_VOLTS 972.0
-#define HEATER A5;
-#define TEMP_SENSOR_1 A0;
+#define HEATER A5; //Analog Pin 5
+#define TEMP_SENSOR_1 A0; //Analog Pin 0 
 
 float tempOne;
 

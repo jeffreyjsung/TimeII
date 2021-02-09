@@ -45,7 +45,7 @@ void setupWrite() {
 
   log_file = SD.open("datalog.txt", FILE_WRITE);
   if (log_file) {
-    log_file.println("Writing...");
+    log_file.println("File Initialized!\n");
     log_file.close();
   }
 }

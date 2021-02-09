@@ -14,7 +14,7 @@ bool atTemp(int pin) {
   return (analogRead(pin) >= FIVE_VOLTS / 2.0);
 }
 
-/*Regulates the temperature.*/
+/*Regulates the temperature by checking thresholds.*/
 void controlThermals() {
   Serial.println(atTemp(TEMP_SENSOR_1));
   if (!atTemp(TEMP_SENSOR_1)) {
