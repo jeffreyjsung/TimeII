@@ -9,7 +9,7 @@ import os
 
 from formatting import *
 from PIL import Image, ImageTk
-
+#
 # Simulator class stores relevant information
 class sim:
     simRunning = False
