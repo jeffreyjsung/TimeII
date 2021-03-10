@@ -15,7 +15,10 @@ typedef enum {
     MICROG,
     POSTFLIGHT
 } STATES;
-
+/**
+ * Variable that will hold the 200 byte packets
+ */
+char current_packet[200];
 /**
  * temp_reg takes in no arguments and determines if
  * the temperature needs to be raised.
@@ -34,8 +37,15 @@ bool temp_reg() {
 float read_temp() {
   return (1.0 / (1.0/298.15 + 1.0/3950.0 * log(1023.0/float(analogRead(TEMP_SENSOR_1)) - 1.0)) - 273.15);
 }
-
+/**
+ */
+void read_packet() {
+    if (Serial.available()) {
+        Serial.readStringUntil('\0').toCharArray(current_packet, 200);
+    } 
+}
 void setup() {
+    Serial.begin(115200);
     STATES flight_status = PREFLIGHT;
     //Thermal Setup
     pinMode(TEMP_SENSOR_1, INPUT);
@@ -47,14 +57,17 @@ void setup() {
 void loop() {
     switch(flight_status) {
         case PREFLIGHT:
+            read_packet()
             temp_reg();
         break;
 
         case MICROG:
+            read_packet()
             temp_reg();
         break;
 
         case POSTFLIGHT:
+            read_packet()
             temp_reg();
         break;
     }
