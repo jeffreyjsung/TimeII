@@ -1,7 +1,21 @@
 #include <SPI.h>
 #include <SD.h>
 #include "definitions.h"
+#define NONE '@'
+#define LIFTOFF 'A'
+#define MECO 'B '
+#define SEPARATION 'C'
+#define COAST_START 'D'
+#define APOGEE 'E'
+#define COAST_END 'F'
+#define UNDERCHUTES 'G'
+#define LANDING 'H'
+#define SAFING 'I'
+#define FINISHED 'J'
 
+#define FIVE_VOLTS 972.0
+#define HEATER A5;
+#define TEMP_SENSOR_1 A0;
 
 typedef enum {
     PREFLIGHT,
@@ -60,6 +74,9 @@ void write_sd(char* packet) {
         log_file.println(read_temp());
         log_file.close();
       }
+      Serial.println("Writing...");
+      Serial.println(packet, 200);
+      Serial.println(read_temp());
 }
 
 void motor_setup(int STEP, int DIR, int nSLEEP) {
@@ -83,6 +100,7 @@ void setup() {
 void loop() {
     switch(flight_status) {
         case PREFLIGHT:
+            Serial.println("In PREFLIGHT!");
             read_packet()
             temp_reg();
             write_sd(current_packet);
@@ -91,6 +109,7 @@ void loop() {
         break;
 
         case MICROG:
+            Serial.println("In MICROG!");
             read_packet()
             temp_reg();
             write_sd(current_packet);
@@ -99,6 +118,7 @@ void loop() {
         break;
 
         case POSTFLIGHT:
+            Serial.println("In POSTFLIGHT!");
             read_packet()
             temp_reg();
             write_sd(current_packet);
