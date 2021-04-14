@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include "definitions.h"
+
 #define NONE '@'
 #define LIFTOFF 'A'
 #define MECO 'B '
@@ -12,7 +13,8 @@
 #define LANDING 'H'
 #define SAFING 'I'
 #define FINISHED 'J'
-
+#define ALTITUDE 3
+#define MICRO_WARN 17
 #define FIVE_VOLTS 972.0
 #define HEATER A5;
 #define TEMP_SENSOR_1 A0;
@@ -26,7 +28,7 @@ typedef enum {
 double newton_constant = 6.67e-11;
 double earth_mass = 6e24;
 double earth_radius = 6.4e6
-//float rocket_mass Assuming that this makes no difference in calculations
+//float rocket_mass = ?; Assuming that this makes no difference in calculations
 
 
 char current_packet[200];
@@ -37,6 +39,28 @@ const int STEP; //step input
 const int DIR; //direction input
 const int nSLEEP; //sleep mode input
 
+//TODO
+//Create generic function that will work with any motor type
+void run_motors(void) {}
+
+String extract_data(int num) {
+    char delim = ',';
+    String data = "";
+    for (size_t i = 0; i < 200; i++) {
+        if (num == 0) {
+            size_t j = i;
+            char curr = current_packet[j];
+            while (curr != delim) {
+                data.concat(curr);
+                j++;
+                curr = current_packet[j];
+            }
+            break;
+        } else if (current_packet[i] == delim)
+            num--;
+    }
+    return data;
+}
 
 double calc_g(String alt) {
     double d_alt = alt.toDouble();
@@ -45,7 +69,7 @@ double calc_g(String alt) {
     return (newton_constant*earth_mass) / ((earth_radius+d_alt)*(earth_radius+d_alt))
 }
 
-bool temp_reg() {
+bool temp_reg(void) {
     // Should change to <= because of schematic
     bool state_ok = (analogRead(TEMP_SENSOR_1) >= FIVE_VOLTS / 2.0);
     if (!state_ok) 
@@ -55,19 +79,19 @@ bool temp_reg() {
 }
 
 
-float read_temp() {
+float read_temp(void) {
   return (1.0 / (1.0/298.15 + 1.0/3950.0 * log(1023.0/float(analogRead(TEMP_SENSOR_1)) - 1.0)) - 273.15);
 }
 
 
-void read_packet() {
+void read_packet(void) {
     if (Serial.available()) {
         Serial.readStringUntil('\0').toCharArray(current_packet, 200);
     } 
 }
 
 
-void setup_sd() {
+void setup_sd(void) {
     while (!SD.begin()) {}
     log_file = SD.open("datalog.txt", FILE_WRITE);
      if (log_file) {
@@ -85,8 +109,9 @@ void write_sd(char* packet) {
         
         log_file.write(packet, 200);
         log_file.print("temperature,");
-        log_file.print("gravity")
         log_file.println(read_temp());
+        log_file.print("gravity");
+        log_file.println(calc_g(extract_data(ALTITUDE)));
         log_file.close();
       }
       Serial.println("Writing...");
@@ -101,7 +126,7 @@ void motor_setup(int STEP, int DIR, int nSLEEP) {
 }
 
 
-void setup() {
+void setup(void) {
     Serial.begin(115200);
     STATES flight_status = PREFLIGHT;
     setup_sd();
@@ -112,14 +137,17 @@ void setup() {
 
 }
 
-void loop() {
+void loop(void) {
     switch(flight_status) {
         case PREFLIGHT:
             Serial.println("In PREFLIGHT!");
             read_packet()
             temp_reg();
             write_sd(current_packet);
-            if (current_packet[0] == COAST_START)
+            /*if (current_packet[0] == COAST_START)
+                flight_status = MICROG;
+                Moving experiment to warning stage.*/
+            if (extract_data(MICRO_WARN))
                 flight_status = MICROG;
         break;
 
