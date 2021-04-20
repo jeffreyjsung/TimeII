@@ -24,12 +24,6 @@ typedef enum {
     MICROG,
     POSTFLIGHT
 } STATES;
-//Math constants
-double newton_constant = 6.67e-11;
-double earth_mass = 6e24;
-double earth_radius = 6.4e6
-//float rocket_mass = ?; Assuming that this makes no difference in calculations
-
 
 char current_packet[200];
 
@@ -60,13 +54,6 @@ String extract_data(int num) {
             num--;
     }
     return data;
-}
-
-double calc_g(String alt) {
-    double d_alt = alt.toDouble();
-    if (d_alt < 0)
-        d_alt *= -1;
-    return (newton_constant*earth_mass) / ((earth_radius+d_alt)*(earth_radius+d_alt))
 }
 
 bool temp_reg(void) {
