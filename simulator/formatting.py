@@ -44,7 +44,7 @@ hardwareOutput = Label(text="Microprocessor Output   \n", font='Helvetica 18 bol
 
 #logo
 scale = 3
-logo_path = os.path.join(os.getcwd(), 'logo.png')
+logo_path = os.path.join(os.getcwd(), 'simulator/logo.png')
 logo = ImageTk.PhotoImage(Image.open(logo_path).resize((scale*53,scale*19), Image.ANTIALIAS))
 imgLabel = Label(root,image=logo)
 imgLabel.grid(row=0, column=0)
