@@ -2,8 +2,6 @@ from tkinter import *
 import os
 from PIL import Image, ImageTk
 
-
-# 43824092384732
 # Colors
 darkish = '#%02x%02x%02x' % (29, 30, 38)
 whitish = '#%02x%02x%02x' % (214, 216, 218)

@@ -205,9 +205,8 @@ def running():
         if connected:
             s.write(text.encode("ascii"))
             print(text.encode("ascii"))
-        root.update_idletasks()
-        root.update()
-
+     
+        #root.update()
 
 
 #  Order of Data Fields:
@@ -233,7 +232,7 @@ chute_warning = IntVar()    # 19
 landing_warning = IntVar()  # 20
 fault_warning = IntVar()    # 21
 
-
+'''
 # GUI labels and fields
 status_column = 1
 warning_column = 2
@@ -332,13 +331,8 @@ subMenu.add_command(label='Regular Speed', command=normalSpeed)
 
 menuBar.add_cascade(label='Ports', menu=portMenu)
 
-
-
-
+'''
 #create window for viewing
 
 timesTen = False
 running()
-
-
-
