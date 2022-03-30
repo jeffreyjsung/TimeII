@@ -17,7 +17,7 @@
 import time
 import serial
 import os
-import msvcrt
+#import msvcrt
 
 
 PROGRESS_BAR_LENGTH = 80

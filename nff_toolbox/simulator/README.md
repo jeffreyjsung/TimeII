@@ -46,7 +46,7 @@ Using the nff-sim is fairly straightforward:
 
 1. Check that the `nff-sim.exe` and `nff-packets.txt` files are located in the same folder.
 2. Connect your feather frame payload to your computer with a handy-dandy USB cable (2.0 or 3.0).
-3. Check what `COM` port your payload shows up as on the computer. This can typically be found by looking under `Device Manager->Ports(COM & LPT)` and will often show up as something like `USB Serial Port (COM7)`. The port name you would provide to the program in this case would be the name in the parentheses: `COM7`.
+3. Check what `COM` port your payload shows up as on the computer. This can typically be found by looking under `Device Manager->Ports(COM & LPT)` and will often show up as something like `USB Serial Port (COM7)`. On a Mac, type `ls /dev/tty.*` into Terminal to find your ports. The port name you would provide to the program in this case would be the name in the parentheses: `COM7`.
 4. Double click the executable file nff-sim.exe to run it and you should see a welcome message that says `Welcome to the NFF simulator` and a note telling you to consult the readme.
 5. The program will then prompt you to enter the ports you would like to connect to. Simply enter in the name of the ports (with spaces in between each entry if there are multiple). For our example, you would simply type COM7 and then press enter.
 6. After entering the ports the program will try to connect to each one and print either `successfully connected to port` or `failed to successfully connect to port` for each of the ports that were provided. (For reasons why connection to a port might fail consult the troubleshooting section of the readme).
