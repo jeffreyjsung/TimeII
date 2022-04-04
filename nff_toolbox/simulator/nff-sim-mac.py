@@ -1,9 +1,9 @@
-# nff-sim.py
+# nff-sim-mac.py
 # Z Porter
 # NanoRacks LLC
 #
-# Version 2.0
-# Last Updated: 2-11-19
+# Version 3.0
+# Last Updated: 4-3-2022
 #
 # - Requires nff-packets.txt to be in the same directory
 # - Consult the ReadMe.md for further use instructions
@@ -17,7 +17,66 @@
 import time
 import serial
 import os
-import msvcrt
+
+# Posix (Linux, OS X)
+import sys
+import termios
+import atexit
+from select import select
+
+
+class KBHit:
+
+    def __init__(self):
+        '''Creates a KBHit object that you can call to do various keyboard things.
+        '''
+        # Save the terminal settings
+        self.fd = sys.stdin.fileno()
+        self.new_term = termios.tcgetattr(self.fd)
+        self.old_term = termios.tcgetattr(self.fd)
+
+        # New terminal setting unbuffered
+        self.new_term[3] = (self.new_term[3] & ~termios.ICANON & ~termios.ECHO)
+        termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.new_term)
+
+        # Support normal-terminal reset at exit
+        atexit.register(self.set_normal_term)
+
+
+    def set_normal_term(self):
+        ''' Resets to normal terminal.  On Windows this is a no-op.
+        '''
+        termios.tcsetattr(self.fd, termios.TCSAFLUSH, self.old_term)
+
+
+    def getch(self):
+        ''' Returns a keyboard character after kbhit() has been called.
+            Should not be called in the same program as getarrow().
+        '''
+
+        s = ''
+        return sys.stdin.read(1)
+
+
+    def getarrow(self):
+        ''' Returns an arrow-key code after kbhit() has been called. Codes are
+        0 : up
+        1 : right
+        2 : down
+        3 : left
+        Should not be called in the same program as getch().
+        '''
+        c = sys.stdin.read(3)[2]
+        vals = [65, 67, 66, 68]
+
+        return vals.index(ord(c.decode('utf-8')))
+
+
+    def kbhit(self):
+        ''' Returns True if keyboard character was hit, False otherwise.
+        '''
+        dr,dw,de = select([sys.stdin], [], [], 0)
+        return dr != []
 
 
 PROGRESS_BAR_LENGTH = 80
@@ -85,6 +144,8 @@ def main():
   # Current speed of the simulation, 1 is normal, 2 is twice as fast, etc.
   speed = 1
 
+
+  kb = KBHit()
   # Iterate through all of the packets (Main simulation loop).
   for lines in all_lines :
     # The higher the speed, the more packets are skipped over.
@@ -96,32 +157,23 @@ def main():
     packet = lines.rstrip()
 
     # Check for keystrokes and if 'q' is entered then exit the loop.
-    if msvcrt.kbhit() :
+    if kb.kbhit():
+      key = ord(kb.getch())
       # Retrieve the key pressed
-      key = ord(msvcrt.getch())
-      
-      # Check if 'q' was pressed
-      if key == 113 :
-        break
+      # Check if key 'q' was pressed 
+      if key == 113: 
+          break
       # Check if 'p' was pressed
-      elif key == 112 :
-        print('')
-        raw_input("Simulation paused, press <enter> to unpause.")
-      # Check if <- or -> was entered, both arrows have two codes that must be
-      # retrieved and both begin with 0 or 224.
-      elif (key == 0) or (key == 224):
-        # Retrieve the second key code for special keys.
-        key = ord(msvcrt.getch())
-
-        # Left arrow code slows down (min is x1).
-        if (key == 75) and (speed != 1) :
-          speed = speed / 2
-        # Right arrow code speeds up (max is x16).
-        elif (key == 77) and (speed != 16) :
-          speed = speed * 2
+      elif key == 112:
+          print('')
+          raw_input("Simulation paused, press <enter> to unpause.")
+      elif key == 68 and speed != 1:
+            speed = speed / 2
+      elif key == 67 and speed != 16:
+            speed = speed * 2
 
     # Clear the terminal so output is printed in the same position each iteration
-    os.system('cls')
+    os.system('clear')
 
     # Cool running effect with the dots.
     print('NFF simulation running' + '.' * ((packet_counter % 12) / 3))
@@ -253,9 +305,11 @@ def main():
     # Increment the packet counter.
     packet_counter += 1
 
+    #sys.stdout.flush()
     # Delay is chosen to result in a send rate of roughly 10Hz, call isn't very precise at ms level.
     time.sleep(0.07)
 
+  kb.set_normal_term()
   # Close all device connections after simulation has finished.
   for devs in ser :
     devs.close()
